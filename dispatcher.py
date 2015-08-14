@@ -11,10 +11,17 @@ class Dispatcher():
     """The dispatcher."""
 
     MAX_PROCESSES = 8
+    TOP_OF_STACK = 0
 
     def __init__(self):
         """Construct the dispatcher."""
         # ...
+
+        #runnable processes
+        self.runnable_processes = []
+
+        #waiting processes
+        self.waiting_processes = []
 
     def set_io_sys(self, io_sys):
         """Set the io subsystem."""
@@ -23,6 +30,11 @@ class Dispatcher():
     def add_process(self, process):
         """Add and start the process."""
         # ...
+        self.runnable_processes.append(process.id)
+
+        self.io_sys.allocate_window_to_process(process, self.TOP_OF_STACK)
+        process.start()
+        self.TOP_OF_STACK += 1 
 
     def dispatch_next_process(self):
         """Dispatch the process at the top of the stack."""

@@ -31,6 +31,7 @@ class Process(threading.Thread):
         self.type = type
         self.panel = None
         self.daemon = True
+        self.state = State.runnable
         # You will need a process state variable - self.state
         # which should only be modified by the dispatcher and io system.
         # the state can be used to determine which list - runnable or waiting the process
@@ -76,8 +77,8 @@ class Process(threading.Thread):
         # pausing and resuming the process.
 
         # check to see if supposed to terminate
-        # if self.state == State.killed:
-        #     _thread.exit()
-        # self.iosys.write(self, "*")
-        sleep(0.1)
+         if self.state == State.killed:
+             _thread.exit()
+         self.iosys.write(self, "*")
+         sleep(0.1)
 
