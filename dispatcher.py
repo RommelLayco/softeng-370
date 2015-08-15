@@ -124,8 +124,23 @@ class Dispatcher():
         process.event.set()
         process.working = True
 
-        self.runnable_processes[len(self.runnable_processes) - 2].event.clear()
-        self.runnable_processes[len(self.runnable_processes) - 2].working = False
+
+        #find second to last process and stop running
+        position = 0
+        for p in self.runnable_processes:
+                
+                if p == self.running[0]:
+                    self.runnable_processes[position].event.clear()
+                    self.runnable_processes[position].working = False
+                    break
+
+                position += 1
+
+        #remove old process from running stack
+        del self.running[0]
+
+        #add selected process to running stack
+        self.running.append(process)
 
 
                 
