@@ -100,10 +100,18 @@ class Dispatcher():
         length = len(self.runnable_processes) 
 
         if process.id == self.runnable_processes[length - 1]: #checking if last index is to be removed
-            self.move_window(runnable_processes[length - 1])
+            #move window
+            l = length -1
+            self.move_processes(l)
+            
+            #delete from runnable list
             del self.runnable_processes[length -1]
         else:
-            self.move_window(runnable_processes[length -2])
+            #move window
+            l = length -2
+            self.move_processes(l)
+           
+            #delete from runnable list
             del self.runnable_processes[length -2]
 
         self.dispatch_next_process()
@@ -119,8 +127,18 @@ class Dispatcher():
         # ...
         return None
 
-    def move_window(self, process ):
-        blank_window_pos = process.window_position
+    def move_processes (self, blankWindowSpace):
+        #move process from blank and below
+        for i in range(blankWindowSpace, len(self.runnable_processes)):
+            if i == len(self.runnable_processes) - 1:
+                break
+            else:
+                self.io_sys.move_process(self.runnable_processes[i+1], blankWindowSpace)
+                blankWindowSpace += 1
 
-        for i in rannge(blank_window_pos)
+
+
+    
+        
+            
 
