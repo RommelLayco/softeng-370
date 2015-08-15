@@ -87,7 +87,10 @@ def kill():
     """Kill the process at the top of the stack."""
     process = get_process_from_user("Enter the number of the process to kill:")
     # ...
-    
+
+    #call the proc_finished method to end program
+    the_dispatcher.proc_finished(process)
+
     return False
 
 def halt():

@@ -123,6 +123,8 @@ class Dispatcher():
         Only called from running processes.
         """
         # ...
+        #change state of process to killed
+        process.state = State.killed
 
         #deallacotee window
         self.io_sys.remove_window_from_process(process)
