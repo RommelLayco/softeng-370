@@ -68,7 +68,7 @@ class Process(threading.Thread):
 
     def run_background(self):
         """Run as a background process."""
-        loops = randint(10, 160)
+        loops = randint(10, 50)
         for i in range(loops):
             self.main_process_body()
 

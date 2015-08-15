@@ -25,6 +25,9 @@ class Dispatcher():
         #waiting processes
         self.waiting_processes = []
 
+        #processes that are actually running
+        self.running = []
+
     def set_io_sys(self, io_sys):
         """Set the io subsystem."""
         self.io_sys = io_sys
@@ -42,6 +45,7 @@ class Dispatcher():
 
             self.io_sys.allocate_window_to_process(process, self.TOP_OF_STACK)
             process.event.set()
+            
 
             if self.TOP_OF_STACK > 1:
                 for i in range (0, len(self.runnable_processes) - 2 ):
@@ -50,6 +54,14 @@ class Dispatcher():
 
             process.start()
             self.TOP_OF_STACK += 1
+
+            #add to running stack
+            if len(self.running) < 2:
+                self.running.append(process)
+            else:
+                #remove process at index 0
+                del self.running[0]
+                self.running.append(process)
 
         #add interactive process to waiting list
         else:
@@ -78,16 +90,26 @@ class Dispatcher():
         elif len(self.runnable_processes) == 1:
             self.runnable_processes[len(self.runnable_processes) -1].event.set()
             self.runnable_processes[len(self.runnable_processes) -1].working = True
+
+            #add to running list
+            self.running.append(self.runnable_processes[0])
         else:
             #change either the last or second to last item to running
             if self.runnable_processes[len(self.runnable_processes) -1].working == False:
                 #change last item to running
                 self.runnable_processes[len(self.runnable_processes) -1].event.set()
                 self.runnable_processes[len(self.runnable_processes) -1].working = True
+
+                #add to running list
+                self.running.append(self.runnable_processes[len(self.runnable_processes) -1])
+
             else:
                 #change second last item in list to running
                 self.runnable_processes[len(self.runnable_processes) -2].event.set()
                 self.runnable_processes[len(self.runnable_processes) -2].working = True
+
+                #add to running list
+                self.running.append(self.runnable_processes[len(self.runnable_processes) - 2])
 
         
         
@@ -165,6 +187,7 @@ class Dispatcher():
             
             #delete from runnable list
             del self.runnable_processes[length -1]
+
         
         elif process == self.runnable_processes[length - 2]:
             #move window
@@ -191,10 +214,13 @@ class Dispatcher():
                 count += 1
             
         
-        
+        #delete from running list
+        if process == self.running[0]:
+            del self.running[0]
+        else:
+            del self.running[1]
+
            
-
-
         self.dispatch_next_process()
 
 
