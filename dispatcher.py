@@ -42,6 +42,7 @@ class Dispatcher():
         if self.TOP_OF_STACK > 1:
             for i in range (0, len(self.runnable_processes) - 2 ):
                 self.runnable_processes[i].event.clear()
+                self.runnable_processes[i].working = False
 
         process.start()
         self.TOP_OF_STACK += 1 
@@ -55,8 +56,17 @@ class Dispatcher():
             pass
         elif len(self.runnable_processes) == 1:
             self.runnable_processes[len(self.runnable_processes) -1].event.set()
+            self.runnable_processes[len(self.runnable_processes) -1].working = True
         else:
-            self.runnable_processes[len(self.runnable_processes) -2].event.set()
+            #change either the last or second to last item to running
+            if self.runnable_processes[len(self.runnable_processes) -1].working == False:
+                #change last item to running
+                self.runnable_processes[len(self.runnable_processes) -1].event.set()
+                self.runnable_processes[len(self.runnable_processes) -1].working = True
+            else:
+                #change second last item in list to running
+                self.runnable_processes[len(self.runnable_processes) -2].event.set()
+                self.runnable_processes[len(self.runnable_processes) -2].working = True
 
         
         
@@ -67,31 +77,12 @@ class Dispatcher():
         #note that process is the process id in this case
         # ...
         
-        #deallacotee window
-        self.io_sys.remove_window_from_process(process)
-
-
-        #get index of process
-        count = 0
-        for i in self.runnable_processes:
-            if process.id == i.id:
-                self.move_processes(count)
-                
-                #delete from runnable list
-                del self.runnable_processes[count]
-                
-
-                break
-
-            #increment index counter
-            count +=1
-
-        w = self.TOP_OF_STACK - 1   
-        
-        self.runnable_processes.append(process)
-        self.io_sys.allocate_window_to_process(process, w)
+        #change state of runnng process and selectedd process
         process.event.set()
-        self.runnable_processes[len(self.runnable_processes) - 3].event.clear()
+        process.working = True
+
+        self.runnable_processes[len(self.runnable_processes) - 2].event.clear()
+        self.runnable_processes[len(self.runnable_processes) - 2].working = False
 
 
                 
@@ -108,14 +99,20 @@ class Dispatcher():
         # ...
         #set the last two items in the list to clear
         self.runnable_processes[len(self.runnable_processes) -1].event.clear()
+        self.runnable_processes[len(self.runnable_processes) -1].working = False
+
         self.runnable_processes[len(self.runnable_processes) -2].event.clear()
+        self.runnable_processes[len(self.runnable_processes) -2].working = False
 
     def resume_system(self):
         """Resume running the system."""
         # ...
         #set the last two items in the list to set
         self.runnable_processes[len(self.runnable_processes) -1].event.set()
+        self.runnable_processes[len(self.runnable_processes) -1].working = True
+
         self.runnable_processes[len(self.runnable_processes) -2].event.set()
+        self.runnable_processes[len(self.runnable_processes) -2].working = True
 
     def wait_until_finished(self):
         """Hang around until all runnable processes are finished."""
@@ -138,20 +135,42 @@ class Dispatcher():
         #length of runnable_processes
         length = len(self.runnable_processes) 
 
-        if process.id == self.runnable_processes[length - 1]: #checking if last index is to be removed
+        if process == self.runnable_processes[length - 1]: #checking if last index is to be removed
             #move window
             l = length -1
             self.move_processes(l)
             
             #delete from runnable list
             del self.runnable_processes[length -1]
-        else:
+        
+        elif process == self.runnable_processes[length - 2]:
             #move window
             l = length -2
             self.move_processes(l)
            
             #delete from runnable list
             del self.runnable_processes[length -2]
+        else:
+            #when process is not located at the end
+            count = 0
+            for i in self.runnable_processes:
+
+                if process == i:
+                    self.move_processes(count)
+                
+                     #delete from runnable list
+                    del self.runnable_processes[count]
+                
+
+                    break
+
+                # increment index counter
+                count += 1
+            
+        
+        
+           
+
 
         self.dispatch_next_process()
 

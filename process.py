@@ -13,6 +13,7 @@ from enum import Enum
 Type = Enum("Type", "background interactive")
 State = Enum("State", "runnable waiting killed")
 
+
 class Process(threading.Thread):
     """A process."""
 
@@ -32,6 +33,7 @@ class Process(threading.Thread):
         self.panel = None
         self.daemon = True
         self.state = State.runnable
+        self.working = True
         # You will need a process state variable - self.state
         # which should only be modified by the dispatcher and io system.
         # the state can be used to determine which list - runnable or waiting the process
