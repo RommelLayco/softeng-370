@@ -19,7 +19,10 @@ class Process(threading.Thread):
 
     next_id = 1
 
-    def __init__(self, iosys, dispatcher, type):
+    #add new arg as can not check type
+    #rt = running type process
+
+    def __init__(self, iosys, dispatcher, type, rt):
         """Construct a process.
         iosys - the io subsystem so the process can do IO
         dispatcher - so that the process can notify the dispatcher when it has finished
@@ -34,6 +37,7 @@ class Process(threading.Thread):
         self.daemon = True
         self.state = State.runnable
         self.working = True
+        self.rt = rt
         # You will need a process state variable - self.state
         # which should only be modified by the dispatcher and io system.
         # the state can be used to determine which list - runnable or waiting the process
@@ -55,12 +59,12 @@ class Process(threading.Thread):
         # Something like the following but you will have to think about
         # pausing and resuming the process.
 
-        # loops = self.ask_user()
-        # while loops > 0:
-        #     for i in range(loops):
-        #         self.main_process_body()
-        #     self.iosys.write(self, "\n")
-        #     loops = self.ask_user()
+        loops = self.ask_user()
+        while loops > 0:
+            for i in range(loops):
+                self.main_process_body()
+            self.iosys.write(self, "\n")
+            loops = self.ask_user()
 
     def run_background(self):
         """Run as a background process."""
@@ -73,6 +77,10 @@ class Process(threading.Thread):
     def ask_user(self):
         """Ask the user for number of loops."""
         self.iosys.write(self, "How many loops? ")
+
+        #block process from running
+        self.event.wait()
+        
         input = self.iosys.read(self)
         if self.state == State.killed:
             _thread.exit()

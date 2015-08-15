@@ -118,13 +118,13 @@ def wait():
 
 def interactive():
     """Create an interactive process."""
-    new_process = process.Process(io_system, the_dispatcher, process.Type.interactive)
+    new_process = process.Process(io_system, the_dispatcher, process.Type.interactive, False)
     the_dispatcher.add_process(new_process)
     return True
 
 def background():
     """Create a background process."""
-    new_process = process.Process(io_system, the_dispatcher, process.Type.background)
+    new_process = process.Process(io_system, the_dispatcher, process.Type.background, True)
     the_dispatcher.add_process(new_process)
     return True
 

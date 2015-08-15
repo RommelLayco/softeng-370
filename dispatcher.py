@@ -12,6 +12,7 @@ class Dispatcher():
 
     MAX_PROCESSES = 8
     TOP_OF_STACK = 0
+    WAITING_STACK = 0
 
     def __init__(self):
         """Construct the dispatcher."""
@@ -31,21 +32,41 @@ class Dispatcher():
     def add_process(self, process):
         """Add and start the process."""
         # ...
-        
+       
+        print (process.rt)
 
+        #check if a background process
+        if process.rt == True:
 
-        self.runnable_processes.append(process)
+            self.runnable_processes.append(process)
 
-        self.io_sys.allocate_window_to_process(process, self.TOP_OF_STACK)
-        process.event.set()
+            self.io_sys.allocate_window_to_process(process, self.TOP_OF_STACK)
+            process.event.set()
 
-        if self.TOP_OF_STACK > 1:
-            for i in range (0, len(self.runnable_processes) - 2 ):
-                self.runnable_processes[i].event.clear()
-                self.runnable_processes[i].working = False
+            if self.TOP_OF_STACK > 1:
+                for i in range (0, len(self.runnable_processes) - 2 ):
+                    self.runnable_processes[i].event.clear()
+                    self.runnable_processes[i].working = False
 
-        process.start()
-        self.TOP_OF_STACK += 1 
+            process.start()
+            self.TOP_OF_STACK += 1
+
+        #add interactive process to waiting list
+        else:
+
+            #change to waiting state
+            process.state = State.waiting
+            process.working = False
+
+            #add to list and block
+            process.event.clear()
+            self.waiting_processes.append(process)
+
+            
+            #add to window
+            self.io_sys.allocate_window_to_process(process, self.WAITING_STACK)
+            process.start()
+            self.WAITING_STACK += 1  
 
     def dispatch_next_process(self):
         """Dispatch the process at the top of the stack."""
@@ -187,13 +208,19 @@ class Dispatcher():
 
         # ...
 
-        #find the process
+        #find the process in runnable
+
         temp = 0
         for i in self.runnable_processes:
          if id == i.id:
             temp = i
             break
         
+        #find the process in waiting
+        for i in self.waiting_processes:
+            if id == i.id:
+                temp = i
+                break
 
         return temp
 
