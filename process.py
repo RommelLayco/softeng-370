@@ -38,6 +38,8 @@ class Process(threading.Thread):
         # appears in.
         # ...
 
+        self.event = threading.Event()
+
     def run(self):
         """Start the process running."""
         if self.type == Type.background:
@@ -60,9 +62,11 @@ class Process(threading.Thread):
 
     def run_background(self):
         """Run as a background process."""
-        loops = randint(10, 160)
+        loops = randint(10, 30)
         for i in range(loops):
             self.main_process_body()
+
+         
 
     def ask_user(self):
         """Ask the user for number of loops."""
@@ -76,9 +80,15 @@ class Process(threading.Thread):
         # Something like the following but you will have to think about
         # pausing and resuming the process.
 
+
+
+
         # check to see if supposed to terminate
          if self.state == State.killed:
-             _thread.exit()
+             _thread.exit()   
+
+         #stop threads from running    
+         self.event.wait()   
          self.iosys.write(self, "*")
          sleep(0.1)
 

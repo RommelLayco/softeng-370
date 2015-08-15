@@ -50,6 +50,7 @@ class IO_Sys():
         panel = curses.panel.new_panel(window)
         self.panels.append(panel)
         process.panel = panel
+        process.window_position = tos
         self.move_process(process, tos)
 
     def remove_window_from_process(self, process):

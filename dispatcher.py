@@ -20,6 +20,7 @@ class Dispatcher():
         #runnable processes
         self.runnable_processes = []
 
+
         #waiting processes
         self.waiting_processes = []
 
@@ -30,15 +31,36 @@ class Dispatcher():
     def add_process(self, process):
         """Add and start the process."""
         # ...
-        self.runnable_processes.append(process.id)
+        
+
+
+        self.runnable_processes.append(process)
 
         self.io_sys.allocate_window_to_process(process, self.TOP_OF_STACK)
+        process.event.set()
+
+        if self.TOP_OF_STACK > 1:
+            for i in range (0, len(self.runnable_processes) - 2 ):
+                self.runnable_processes[i].event.clear()
+
         process.start()
         self.TOP_OF_STACK += 1 
 
     def dispatch_next_process(self):
         """Dispatch the process at the top of the stack."""
         # ...
+
+        #check if there is anything to dispatch
+        if len(self.runnable_processes) == 0:
+            pass
+        elif len(self.runnable_processes) == 1:
+            self.runnable_processes[len(self.runnable_processes) -1].event.set()
+        else:
+            self.runnable_processes[len(self.runnable_processes) -2].event.set()
+
+        
+        
+
 
     def to_top(self, process):
         """Move the process to the top of the stack."""
@@ -66,6 +88,28 @@ class Dispatcher():
         """
         # ...
 
+        #deallacotee window
+        self.io_sys.remove_window_from_process(process)
+       
+        #decrease stack size constant
+        self.TOP_OF_STACK -= 1
+
+        #remove from list
+
+        #length of runnable_processes
+        length = len(self.runnable_processes) 
+
+        if process.id == self.runnable_processes[length - 1]: #checking if last index is to be removed
+            self.move_window(runnable_processes[length - 1])
+            del self.runnable_processes[length -1]
+        else:
+            self.move_window(runnable_processes[length -2])
+            del self.runnable_processes[length -2]
+
+        self.dispatch_next_process()
+
+
+
     def proc_waiting(self, process):
         """Receive notification that process is waiting for input."""
         # ...
@@ -74,4 +118,9 @@ class Dispatcher():
         """Return the process with the id."""
         # ...
         return None
+
+    def move_window(self, process ):
+        blank_window_pos = process.window_position
+
+        for i in rannge(blank_window_pos)
 
