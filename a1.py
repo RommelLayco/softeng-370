@@ -76,6 +76,11 @@ def top():
     """Move a runnable process to the top of the stack."""
     process = get_process_from_user("Enter the number of the process to move:")
     # ...
+    #call the top method
+    the_dispatcher.to_top(process)
+    
+    
+    
     return False
 
 def kill():

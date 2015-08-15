@@ -64,7 +64,40 @@ class Dispatcher():
 
     def to_top(self, process):
         """Move the process to the top of the stack."""
+        #note that process is the process id in this case
         # ...
+        
+        #deallacotee window
+        self.io_sys.remove_window_from_process(process)
+
+
+        #get index of process
+        count = 0
+        for i in self.runnable_processes:
+            if process.id == i.id:
+                self.move_processes(count)
+                
+                #delete from runnable list
+                del self.runnable_processes[count]
+                
+
+                break
+
+            #increment index counter
+            count +=1
+
+        w = self.TOP_OF_STACK - 1   
+        
+        self.runnable_processes.append(process)
+        self.io_sys.allocate_window_to_process(process, w)
+        process.event.set()
+        self.runnable_processes[len(self.runnable_processes) - 3].event.clear()
+
+
+                
+        
+                
+        
 
 
     def pause_system(self):
@@ -73,10 +106,16 @@ class Dispatcher():
         effectively pauses the system.
         """
         # ...
+        #set the last two items in the list to clear
+        self.runnable_processes[len(self.runnable_processes) -1].event.clear()
+        self.runnable_processes[len(self.runnable_processes) -2].event.clear()
 
     def resume_system(self):
         """Resume running the system."""
         # ...
+        #set the last two items in the list to set
+        self.runnable_processes[len(self.runnable_processes) -1].event.set()
+        self.runnable_processes[len(self.runnable_processes) -2].event.set()
 
     def wait_until_finished(self):
         """Hang around until all runnable processes are finished."""
@@ -124,8 +163,18 @@ class Dispatcher():
 
     def process_with_id(self, id):
         """Return the process with the id."""
+
         # ...
-        return None
+
+        #find the process
+        temp = 0
+        for i in self.runnable_processes:
+         if id == i.id:
+            temp = i
+            break
+        
+
+        return temp
 
     def move_processes (self, blankWindowSpace):
         #move process from blank and below
