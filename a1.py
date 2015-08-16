@@ -70,6 +70,14 @@ def focus():
     # only get here after the user has pressed return
     # put the data in the buffer of the process and wake it up
     # ...
+
+    #change input to int and store in buffer
+    process.buffer = int(input)
+
+    #unblock process
+    process.event.set()
+
+
     return False
 
 def top():

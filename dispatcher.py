@@ -242,6 +242,39 @@ class Dispatcher():
         """Receive notification that process is waiting for input."""
         # ...
 
+        #remove process from waiting
+        count = 0
+        for w in self.waiting_processes:
+            if w == process:
+                #deallocate window
+                self.io_sys.remove_window_from_process(process)
+
+                #remove from list
+                del self.waiting_processes[count]
+                self.WAITING_STACK -= 1
+                break
+            count += 1
+
+        #add to runnable list
+        process.state = State.runnable
+        process.working = True
+
+        #allocate to window
+        self.io_sys.allocate_window_to_process(process, self.TOP_OF_STACK)
+        self.runnable_processes.append(process)
+        self.TOP_OF_STACK +=1
+
+        #add to running stack
+        if len(self.running) < 2:
+            self.running.append(process)
+        else:                
+        #remove process at index 0
+            del self.running[0]
+            self.running.append(process)
+
+        # return loop number
+        return process.buffer
+
     def process_with_id(self, id):
         """Return the process with the id."""
 

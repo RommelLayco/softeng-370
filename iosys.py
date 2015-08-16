@@ -97,9 +97,9 @@ class IO_Sys():
     def read(self, process):
         """Gets input from the window associated with 'process'."""
         # change the state of the process to waiting
-        self.the_dispatcher.proc_waiting(process)
+        number = self.the_dispatcher.proc_waiting(process)
         # ...
-        return # return the data here
+        return number # return the data here
 
 # =======================================================================================================================
 
