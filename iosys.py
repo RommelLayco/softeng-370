@@ -1,6 +1,9 @@
 # A1 for COMPSCI340/SOFTENG370 2015
 # Prepared by Robert Sheehan
 # Modified by ...
+# name: Rommel Layco
+# upi: rlay045
+# Student_id: 8216893
 
 # You are not allowed to use any sleep calls.
 

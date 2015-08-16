@@ -1,0 +1,20 @@
+name: Rommel Layco 
+upi: rlay045
+student_id: 8216893
+
+Question 1
+
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|p1|p2|p3|      p4      |          p3           |   p2   |          p1        |     
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+0  1  2  3              8                       16       20                    
+
+waiting time = (1 + 2 + 3 + 20) / 4 = 6.5
+
+Question 2
+
+When a process is finished the thread or the processor automatically stops and does new work. The call is needed in python threads as we must expliclity tell the thread that the job we want it to do (print '*') is finished and therefore should stop and hence we call thread.exit(). Otherwise the thread will continue running.
+
+Question 3
+
+No as processes have different priorties. Alot of work will be done moving the highest priority process to the top of the stack. Regardless if the disrtribution of process is done by the processer or a seperate stack processer, the work will block other free processers from grabing a process and doing work.

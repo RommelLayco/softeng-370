@@ -2,6 +2,9 @@
 # A1 for COMPSCI340/SOFTENG370 2015
 # Prepared by Robert Sheehan
 # Modified by ...
+# name: Rommel Layco
+# upi: rlay045
+# Student_id: 8216893
 
 import dispatcher
 import iosys
@@ -76,6 +79,7 @@ def focus():
 
     #unblock process
     process.event.set()
+
 
 
     return False
