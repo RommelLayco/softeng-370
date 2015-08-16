@@ -179,6 +179,9 @@ class Dispatcher():
     def wait_until_finished(self):
         """Hang around until all runnable processes are finished."""
         # ...
+        while len(self.runnable_processes) > 0 :
+            #just loop around and do nothing
+            pass
 
     def proc_finished(self, process):
         """Receive notification that "proc" has finished.
