@@ -268,6 +268,19 @@ class Dispatcher():
         self.runnable_processes.append(process)
         self.TOP_OF_STACK +=1
 
+        
+        #find second to last process and stop running
+        position = 0
+        for p in self.runnable_processes:
+                
+                if p == self.running[0]:
+                    self.runnable_processes[position].event.clear()
+                    self.runnable_processes[position].working = False
+                    break
+
+                position += 1
+
+
         #add to running stack
         if len(self.running) < 2:
             self.running.append(process)
