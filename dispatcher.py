@@ -136,11 +136,15 @@ class Dispatcher():
 
                 position += 1
 
-        #remove old process from running stack
-        del self.running[0]
+       
+        #add to running stack
+        if len(self.running) < 2:
+            self.running.append(process)
+        else:                
+        #remove process at index 0
+            del self.running[0]
+            self.running.append(process)
 
-        #add selected process to running stack
-        self.running.append(process)
 
 
                 
