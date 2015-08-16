@@ -313,6 +313,23 @@ class Dispatcher():
         #change state of process to killed
         process.state = State.killed
 
+    def wait_again (self, process):
+        #remove process from runnable list and window
+        self.proc_finished(process)
+
+        #add process to waiting list and window
+        process.state = State.waiting
+        process.working = False
+
+        #add to list and block
+        process.event.clear()
+        self.waiting_processes.append(process)
+
+            
+        #add to window
+        self.io_sys.allocate_window_to_process(process, self.WAITING_STACK)
+        self.WAITING_STACK += 1 
+
 
 
     

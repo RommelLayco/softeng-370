@@ -3,7 +3,7 @@
 # Modified by ...
 
 # You are not allowed to use any extra sleep calls.
-
+import dispatcher
 import threading
 import _thread
 from random import randint
@@ -64,7 +64,11 @@ class Process(threading.Thread):
         while loops > 0:
             for i in range(loops):
                 self.main_process_body()
+            
             self.iosys.write(self, "\n")
+
+            self.dispatcher.wait_again(self)
+            
             loops = self.ask_user()
 
     def run_background(self):
