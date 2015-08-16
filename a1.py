@@ -88,6 +88,8 @@ def kill():
     process = get_process_from_user("Enter the number of the process to kill:")
     # ...
 
+    the_dispatcher.kill(process)
+
     #call the proc_finished method to end program
     the_dispatcher.proc_finished(process)
 
